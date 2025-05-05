@@ -18,30 +18,83 @@ const ContatoPage = () => {
     servico: 'financiamento'
   });
   
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    // Simulando envio do formulário
-    console.log('Formulário enviado:', formData);
-    
-    toast({
-      title: "Mensagem enviada!",
-      description: "Entraremos em contato em breve.",
-    });
-    
-    // Reset form
-    setFormData({
-      nome: '',
-      email: '',
-      telefone: '',
-      mensagem: '',
-      servico: 'financiamento'
-    });
+    try {
+      // Em ambiente de produção (quando o formulário for enviado ao servidor)
+      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        // Criar FormData para enviar ao PHP
+        const formDataObj = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+          formDataObj.append(key, value);
+        });
+        
+        // Enviar para o script PHP
+        const response = await fetch('./enviar-contato.php', {
+          method: 'POST',
+          body: formDataObj,
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erro ao enviar formulário');
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          toast({
+            title: "Mensagem enviada!",
+            description: "Entraremos em contato em breve.",
+          });
+          
+          // Reset form
+          setFormData({
+            nome: '',
+            email: '',
+            telefone: '',
+            mensagem: '',
+            servico: 'financiamento'
+          });
+        } else {
+          throw new Error(result.message || 'Erro ao processar mensagem');
+        }
+      } else {
+        // Em ambiente de desenvolvimento (simulação)
+        console.log('Formulário enviado (simulação):', formData);
+        
+        toast({
+          title: "Mensagem enviada! (simulação)",
+          description: "Em ambiente de produção, esta mensagem seria enviada por e-mail.",
+        });
+        
+        // Reset form
+        setFormData({
+          nome: '',
+          email: '',
+          telefone: '',
+          mensagem: '',
+          servico: 'financiamento'
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao enviar mensagem:', error);
+      toast({
+        title: "Erro!",
+        description: "Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -225,9 +278,10 @@ const ContatoPage = () => {
                   <Button 
                     type="submit" 
                     className="w-full bg-caixa-orange hover:bg-caixa-blue text-white"
+                    disabled={isSubmitting}
                   >
                     <Send className="mr-2 h-4 w-4" />
-                    Enviar Mensagem
+                    {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}
                   </Button>
                 </form>
               </div>
