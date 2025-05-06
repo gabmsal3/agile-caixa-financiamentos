@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Home, CreditCard, Briefcase, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import ServiceCard from '@/components/ServiceCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import PartnersCarousel from '@/components/PartnersCarousel';
 
 const Index = () => {
   const services = [
@@ -196,6 +196,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+      
+      {/* Partners Carousel */}
+      <PartnersCarousel />
       
       {/* CTA Section */}
       <section className="py-16 bg-caixa-orange text-white">
