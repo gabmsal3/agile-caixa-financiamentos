@@ -53,14 +53,14 @@ const Index = () => {
       <section className="relative bg-gradient-to-r from-caixa-blue to-caixa-lightBlue text-white py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0 animate-fade-in">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <div className="md:w-1/2 mb-10 md:mb-0">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 hero-title">
                 Realize seus sonhos com a Agile Financiamentos
               </h1>
-              <p className="text-xl mb-8">
+              <p className="text-xl mb-8 hero-description">
                 Correspondente bancário da Caixa Econômica Federal, oferecendo as melhores soluções em financiamento habitacional, consórcios e empréstimos.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 hero-buttons">
                 <Link to="/servicos">
                   <Button className="bg-caixa-orange hover:bg-white hover:text-caixa-orange text-white px-8 py-3 rounded-md text-lg">
                     Conhecer Serviços
@@ -77,7 +77,7 @@ const Index = () => {
                 </a>
               </div>
             </div>
-            <div className="md:w-1/2 md:pl-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <div className="md:w-1/2 md:pl-8 hero-card">
               <div className="bg-white rounded-lg p-6 shadow-lg">
                 <h3 className="text-caixa-blue text-xl font-bold mb-4">Solicite uma simulação gratuita</h3>
                 <ul className="space-y-3 text-gray-700">

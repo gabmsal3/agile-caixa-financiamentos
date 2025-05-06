@@ -19,8 +19,8 @@ const Navbar = () => {
             <div className="flex-shrink-0 flex items-center">
               <Link to="/">
                 <img
-                  className="h-16 w-auto" // Increased from h-12 to h-16 (approximately 30% increase)
-                  src="/lovable-uploads/5e660417-71dd-4aa2-81c8-ce29b02d0464.png"
+                  className="h-16 w-auto"
+                  src="/lovable-uploads/81ebc069-acaf-494d-83c8-a4478395089a.png"
                   alt="Agile Financiamentos"
                 />
               </Link>
