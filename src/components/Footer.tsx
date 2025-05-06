@@ -1,5 +1,6 @@
 
 import { Phone, Mail, MapPin, Home, Briefcase, CreditCard } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -37,24 +38,24 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-4">Links rápidos</h3>
             <ul className="space-y-2">
               <li>
-                <a href="/" className="flex items-center hover:text-caixa-orange">
+                <Link to="/" className="flex items-center hover:text-caixa-orange">
                   <Home size={16} className="mr-2" /> Início
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/servicos" className="flex items-center hover:text-caixa-orange">
+                <Link to="/servicos" className="flex items-center hover:text-caixa-orange">
                   <Briefcase size={16} className="mr-2" /> Nossos Serviços
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/sobre" className="flex items-center hover:text-caixa-orange">
+                <Link to="/sobre" className="flex items-center hover:text-caixa-orange">
                   <CreditCard size={16} className="mr-2" /> Sobre Nós
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/contato" className="flex items-center hover:text-caixa-orange">
+                <Link to="/contato" className="flex items-center hover:text-caixa-orange">
                   <Phone size={16} className="mr-2" /> Contato
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

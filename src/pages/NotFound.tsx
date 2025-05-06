@@ -1,5 +1,5 @@
 
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -21,11 +21,11 @@ const NotFound = () => {
         <p className="text-gray-500 mb-8">
           A página que você está procurando não existe ou foi movida.
         </p>
-        <a href="/" className="block">
+        <Link to="/">
           <Button className="bg-caixa-orange hover:bg-caixa-blue text-white">
             Voltar para o início
           </Button>
-        </a>
+        </Link>
       </div>
     </div>
   );
