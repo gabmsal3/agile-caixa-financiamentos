@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -101,29 +102,4 @@
     opacity: 1;
     transform: translateX(0);
   }
-}
-
-/* Hero section styling with background image */
-.hero-section {
-  position: relative;
-  background-image: url('/lovable-uploads/hero-bg.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.hero-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to right, rgba(0, 87, 184, 0.95), rgba(0, 132, 214, 0.9));
-  z-index: 1;
-}
-
-.hero-section > div {
-  position: relative;
-  z-index: 2;
 }
