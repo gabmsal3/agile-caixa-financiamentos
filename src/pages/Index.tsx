@@ -49,8 +49,8 @@ const Index = () => {
       <Navbar />
       <WhatsAppButton />
       
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-caixa-blue to-caixa-lightBlue text-white py-24">
+      {/* Hero Section with background image */}
+      <section className="hero-section relative text-white py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center">
             <div className="md:w-1/2 mb-10 md:mb-0">
