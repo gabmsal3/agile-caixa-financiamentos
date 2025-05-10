@@ -15,6 +15,8 @@ import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/admin/LoginPage";
 import DashboardPage from "./pages/admin/DashboardPage";
 import TextsPage from "./pages/admin/TextsPage";
+import ContactInfoPage from "./pages/admin/ContactInfoPage";
+import ServiceItemsPage from "./pages/admin/ServiceItemsPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 import AdminLayout from "./components/admin/AdminLayout";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
@@ -43,6 +45,8 @@ const App = () => (
           }>
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="texts" element={<TextsPage />} />
+            <Route path="contact-info" element={<ContactInfoPage />} />
+            <Route path="service-items" element={<ServiceItemsPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="" element={<DashboardPage />} />
           </Route>

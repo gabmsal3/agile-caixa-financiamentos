@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useTextsStore } from '@/data/siteTexts';
 
 const Footer = () => {
-  const { texts } = useTextsStore();
+  const { texts, contactInfo } = useTextsStore();
   
   const contatoText = texts.find(t => t.id === 'footerContato') || { title: '', description: '' };
   const linksText = texts.find(t => t.id === 'footerLinks') || { title: '', description: '' };
@@ -20,21 +20,21 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center">
                 <Phone size={20} className="mr-2 flex-shrink-0" />
-                <a href="tel:+5517996779156" className="hover:text-caixa-orange">
-                  (17) 99677-9156
+                <a href={`tel:${contactInfo.phone.replace(/\D/g, '')}`} className="hover:text-caixa-orange">
+                  {contactInfo.phone}
                 </a>
               </li>
               <li className="flex items-center">
                 <Mail size={20} className="mr-2 flex-shrink-0" />
-                <a href="mailto:contato@agilefinanciamentos.com.br" className="hover:text-caixa-orange">
-                  contato@agilefinanciamentos.com.br
+                <a href={`mailto:${contactInfo.email}`} className="hover:text-caixa-orange">
+                  {contactInfo.email}
                 </a>
               </li>
               <li className="flex items-start">
                 <MapPin size={20} className="mr-2 mt-1 flex-shrink-0" />
                 <span>
-                  Av. Navarro de Andrade, 937<br />
-                  Centro, Santa Fé do Sul - SP
+                  {contactInfo.address.line1}<br />
+                  {contactInfo.address.line2}
                 </span>
               </li>
             </ul>
@@ -70,10 +70,10 @@ const Footer = () => {
           {/* Horário de atendimento */}
           <div>
             <h3 className="text-xl font-bold mb-4">{horarioText.title}</h3>
-            <p className="mb-4">Segunda a Sexta: 8h às 18h</p>
-            <p className="mb-4">Sábados: 8h às 12h</p>
+            <p className="mb-4">Segunda a Sexta: {contactInfo.schedule.weekdays}</p>
+            <p className="mb-4">Sábados: {contactInfo.schedule.saturday}</p>
             <a 
-              href="https://wa.me/5517996779156"
+              href={`https://wa.me/${contactInfo.phone.replace(/\D/g, '')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-caixa-orange hover:bg-white hover:text-caixa-orange px-4 py-2 rounded-md transition-colors duration-300"

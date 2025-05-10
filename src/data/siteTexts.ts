@@ -12,6 +12,135 @@ export interface SiteText {
   content?: string;
 }
 
+// Interface específica para informações de contato
+export interface ContactInfo {
+  email: string;
+  phone: string;
+  address: {
+    line1: string;
+    line2: string;
+  };
+  schedule: {
+    weekdays: string;
+    saturday: string;
+    sunday: string;
+  };
+}
+
+// Interface para os itens dos serviços
+export interface ServiceItem {
+  title: string;
+  items: string[];
+}
+
+export interface ServiceItemGroup {
+  id: string;
+  section: string;
+  title: string;
+  items: ServiceItem[];
+}
+
+export const defaultContactInfo: ContactInfo = {
+  email: "contato@agilefinanciamentos.com.br",
+  phone: "(17) 99677-9156",
+  address: {
+    line1: "Av. Navarro de Andrade, 937",
+    line2: "Centro, Santa Fé do Sul - SP"
+  },
+  schedule: {
+    weekdays: "8h às 18h",
+    saturday: "8h às 12h",
+    sunday: "Fechado"
+  }
+};
+
+export const defaultServiceItems: ServiceItemGroup[] = [
+  {
+    id: "financiamentoItems",
+    section: "Serviços - Financiamento Itens",
+    title: "Financiamento Habitacional",
+    items: [
+      {
+        title: "Minha Casa Minha Vida",
+        items: [
+          "Subsídios de até R$ 55.000,00",
+          "Financiamento de até 80% do valor do imóvel",
+          "Taxa de juros reduzida",
+          "Até 35 anos para pagar"
+        ]
+      },
+      {
+        title: "SBPE",
+        items: [
+          "Para imóveis de maior valor",
+          "Financiamento de até 80% do valor do imóvel",
+          "Taxas competitivas",
+          "Prazos flexíveis"
+        ]
+      }
+    ]
+  },
+  {
+    id: "consorciosItems",
+    section: "Serviços - Consórcios Itens",
+    title: "Consórcios",
+    items: [
+      {
+        title: "Consórcio de Imóveis",
+        items: [
+          "Aquisição de casa, apartamento, terreno",
+          "Construção e reforma",
+          "Sem juros",
+          "Prazos de até 200 meses"
+        ]
+      },
+      {
+        title: "Consórcio de Veículos",
+        items: [
+          "Carros, motos, caminhões",
+          "Veículos novos ou usados",
+          "Sem juros",
+          "Prazos flexíveis"
+        ]
+      },
+      {
+        title: "Consórcio de Serviços",
+        items: [
+          "Viagens",
+          "Festas e eventos",
+          "Cirurgias e tratamentos",
+          "Planejamento financeiro"
+        ]
+      }
+    ]
+  },
+  {
+    id: "emprestimosItems",
+    section: "Serviços - Empréstimos Itens",
+    title: "Empréstimos",
+    items: [
+      {
+        title: "Empréstimo Consignado",
+        items: [
+          "Para aposentados e pensionistas do INSS",
+          "Servidores públicos",
+          "As menores taxas do mercado",
+          "Desconto em folha"
+        ]
+      },
+      {
+        title: "Empréstimo Pessoal",
+        items: [
+          "Liberação rápida",
+          "Taxas competitivas",
+          "Prazos flexíveis",
+          "Sem necessidade de garantia"
+        ]
+      }
+    ]
+  }
+];
+
 export const defaultTexts: SiteText[] = [
   // Home Page
   {
@@ -178,7 +307,11 @@ export const defaultTexts: SiteText[] = [
 // Store para gerenciar os textos do site
 interface TextsState {
   texts: SiteText[];
+  contactInfo: ContactInfo;
+  serviceItems: ServiceItemGroup[];
   updateText: (id: string, updates: Partial<SiteText>) => void;
+  updateContactInfo: (updates: Partial<ContactInfo>) => void;
+  updateServiceItem: (groupId: string, itemIndex: number, title: string, items: string[]) => void;
   resetToDefaults: () => void;
 }
 
@@ -186,13 +319,38 @@ export const useTextsStore = create<TextsState>()(
   persist(
     (set) => ({
       texts: defaultTexts,
+      contactInfo: defaultContactInfo,
+      serviceItems: defaultServiceItems,
       updateText: (id, updates) => 
         set((state) => ({
           texts: state.texts.map((text) => 
             text.id === id ? { ...text, ...updates } : text
           )
         })),
-      resetToDefaults: () => set({ texts: defaultTexts })
+      updateContactInfo: (updates) =>
+        set((state) => ({
+          contactInfo: { ...state.contactInfo, ...updates }
+        })),
+      updateServiceItem: (groupId, itemIndex, title, items) =>
+        set((state) => ({
+          serviceItems: state.serviceItems.map(group => 
+            group.id === groupId 
+              ? { 
+                  ...group, 
+                  items: group.items.map((item, idx) => 
+                    idx === itemIndex 
+                      ? { title, items } 
+                      : item
+                  )
+                }
+              : group
+          )
+        })),
+      resetToDefaults: () => set({ 
+        texts: defaultTexts,
+        contactInfo: defaultContactInfo,
+        serviceItems: defaultServiceItems
+      })
     }),
     {
       name: 'agile-site-texts',

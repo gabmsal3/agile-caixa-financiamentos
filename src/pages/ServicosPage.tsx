@@ -4,8 +4,19 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { useTextsStore } from '@/data/siteTexts';
 
 const ServicosPage = () => {
+  const { texts, serviceItems, contactInfo } = useTextsStore();
+  const heroText = texts.find(t => t.id === 'servicosHero') || { title: '', description: '' };
+  const financiamentoText = texts.find(t => t.id === 'servicosFinanciamento') || { title: '', description: '' };
+  const consorciosText = texts.find(t => t.id === 'servicosConsorcios') || { title: '', description: '' };
+  const emprestimosText = texts.find(t => t.id === 'servicosEmprestimos') || { title: '', description: '' };
+  
+  const financiamentoItems = serviceItems.find(g => g.id === 'financiamentoItems')?.items || [];
+  const consorciosItems = serviceItems.find(g => g.id === 'consorciosItems')?.items || [];
+  const emprestimosItems = serviceItems.find(g => g.id === 'emprestimosItems')?.items || [];
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -14,9 +25,9 @@ const ServicosPage = () => {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-caixa-blue to-caixa-lightBlue text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold mb-4">Nossos Serviços</h1>
+          <h1 className="text-4xl font-bold mb-4">{heroText.title}</h1>
           <p className="text-xl max-w-3xl mx-auto">
-            Conheça em detalhes todos os serviços que oferecemos para você realizar seus projetos e sonhos.
+            {heroText.description}
           </p>
         </div>
       </section>
@@ -30,57 +41,32 @@ const ServicosPage = () => {
               <div className="w-16 h-16 rounded-full bg-caixa-blue flex items-center justify-center mr-4">
                 <Home className="h-8 w-8 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-caixa-blue">Financiamento Habitacional</h2>
+              <h2 className="text-3xl font-bold text-caixa-blue">{financiamentoText.title}</h2>
             </div>
             
             <p className="text-lg text-gray-700 mb-8">
-              Realizamos o sonho da casa própria com as melhores condições do mercado. Como correspondente bancário da Caixa Econômica Federal, oferecemos excelentes condições para você financiar seu imóvel.
+              {financiamentoText.description}
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-caixa-blue">
-                <h3 className="text-xl font-bold text-caixa-blue mb-4">Minha Casa Minha Vida</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Subsídios de até R$ 55.000,00</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Financiamento de até 80% do valor do imóvel</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Taxa de juros reduzida</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Até 35 anos para pagar</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-caixa-orange">
-                <h3 className="text-xl font-bold text-caixa-blue mb-4">SBPE</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Para imóveis de maior valor</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Financiamento de até 80% do valor do imóvel</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Taxas competitivas</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Prazos flexíveis</span>
-                  </li>
-                </ul>
-              </div>
+              {financiamentoItems.map((item, index) => (
+                <div 
+                  key={`financiamento-${index}`} 
+                  className={`bg-white p-6 rounded-lg shadow-md border-l-4 ${
+                    index % 2 === 0 ? 'border-caixa-blue' : 'border-caixa-orange'
+                  }`}
+                >
+                  <h3 className="text-xl font-bold text-caixa-blue mb-4">{item.title}</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    {item.items.map((listItem, idx) => (
+                      <li key={`financiamento-${index}-item-${idx}`} className="flex items-start">
+                        <span className="text-caixa-orange font-bold mr-2">•</span>
+                        <span>{listItem}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
             
             <Accordion type="single" collapsible className="w-full">
@@ -125,79 +111,32 @@ const ServicosPage = () => {
               <div className="w-16 h-16 rounded-full bg-caixa-blue flex items-center justify-center mr-4">
                 <Briefcase className="h-8 w-8 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-caixa-blue">Consórcios</h2>
+              <h2 className="text-3xl font-bold text-caixa-blue">{consorciosText.title}</h2>
             </div>
             
             <p className="text-lg text-gray-700 mb-8">
-              Uma excelente opção para adquirir bens e serviços sem juros. Os consórcios da Caixa oferecem planos flexíveis que se adaptam ao seu orçamento.
+              {consorciosText.description}
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-              <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-caixa-blue">
-                <h3 className="text-xl font-bold text-caixa-blue mb-4">Consórcio de Imóveis</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Aquisição de casa, apartamento, terreno</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Construção e reforma</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Sem juros</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Prazos de até 200 meses</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-caixa-orange">
-                <h3 className="text-xl font-bold text-caixa-blue mb-4">Consórcio de Veículos</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Carros, motos, caminhões</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Veículos novos ou usados</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Sem juros</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Prazos flexíveis</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-caixa-blue">
-                <h3 className="text-xl font-bold text-caixa-blue mb-4">Consórcio de Serviços</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Viagens</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Festas e eventos</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Cirurgias e tratamentos</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Planejamento financeiro</span>
-                  </li>
-                </ul>
-              </div>
+              {consorciosItems.map((item, index) => (
+                <div 
+                  key={`consorcio-${index}`} 
+                  className={`bg-white p-6 rounded-lg shadow-md border-l-4 ${
+                    index % 2 === 0 ? 'border-caixa-blue' : 'border-caixa-orange'
+                  }`}
+                >
+                  <h3 className="text-xl font-bold text-caixa-blue mb-4">{item.title}</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    {item.items.map((listItem, idx) => (
+                      <li key={`consorcio-${index}-item-${idx}`} className="flex items-start">
+                        <span className="text-caixa-orange font-bold mr-2">•</span>
+                        <span>{listItem}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
             
             <Accordion type="single" collapsible className="w-full">
@@ -235,57 +174,32 @@ const ServicosPage = () => {
               <div className="w-16 h-16 rounded-full bg-caixa-blue flex items-center justify-center mr-4">
                 <CreditCard className="h-8 w-8 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-caixa-blue">Empréstimos</h2>
+              <h2 className="text-3xl font-bold text-caixa-blue">{emprestimosText.title}</h2>
             </div>
             
             <p className="text-lg text-gray-700 mb-8">
-              Soluções financeiras para suas necessidades pessoais e empresariais, com as melhores condições do mercado.
+              {emprestimosText.description}
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-caixa-blue">
-                <h3 className="text-xl font-bold text-caixa-blue mb-4">Empréstimo Consignado</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Para aposentados e pensionistas do INSS</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Servidores públicos</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>As menores taxas do mercado</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Desconto em folha</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-caixa-orange">
-                <h3 className="text-xl font-bold text-caixa-blue mb-4">Empréstimo Pessoal</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Liberação rápida</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Taxas competitivas</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Prazos flexíveis</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-caixa-orange font-bold mr-2">•</span>
-                    <span>Sem necessidade de garantia</span>
-                  </li>
-                </ul>
-              </div>
+              {emprestimosItems.map((item, index) => (
+                <div 
+                  key={`emprestimo-${index}`} 
+                  className={`bg-white p-6 rounded-lg shadow-md border-l-4 ${
+                    index % 2 === 0 ? 'border-caixa-blue' : 'border-caixa-orange'
+                  }`}
+                >
+                  <h3 className="text-xl font-bold text-caixa-blue mb-4">{item.title}</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    {item.items.map((listItem, idx) => (
+                      <li key={`emprestimo-${index}-item-${idx}`} className="flex items-start">
+                        <span className="text-caixa-orange font-bold mr-2">•</span>
+                        <span>{listItem}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
             
             <Accordion type="single" collapsible className="w-full">
@@ -326,7 +240,7 @@ const ServicosPage = () => {
             Entre em contato agora mesmo e descubra como podemos ajudar você a conquistar seus objetivos.
           </p>
           <a 
-            href="https://wa.me/5517996779156?text=Olá, gostaria de mais informações sobre os serviços" 
+            href={`https://wa.me/${contactInfo.phone.replace(/\D/g, '')}?text=Olá, gostaria de mais informações sobre os serviços`}
             target="_blank" 
             rel="noopener noreferrer"
             className="inline-block bg-white text-caixa-orange hover:bg-caixa-blue hover:text-white px-8 py-3 rounded-md text-lg font-medium transition-colors duration-300"

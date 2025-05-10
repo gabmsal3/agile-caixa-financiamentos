@@ -4,7 +4,7 @@ import { MessageCircle } from 'lucide-react';
 import { useTextsStore } from '@/data/siteTexts';
 
 const HeroSection = () => {
-  const { texts } = useTextsStore();
+  const { texts, contactInfo } = useTextsStore();
   const heroText = texts.find(t => t.id === 'contatoHero') || { title: '', description: '' };
 
   return (
@@ -19,7 +19,7 @@ const HeroSection = () => {
           className="bg-green-500 hover:bg-green-600 text-white"
         >
           <a
-            href="https://wa.me/5517996779156"
+            href={`https://wa.me/${contactInfo.phone.replace(/\D/g, '')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2"
