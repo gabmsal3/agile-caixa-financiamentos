@@ -1,3 +1,4 @@
+
 import { Link } from 'react-router-dom';
 import { Home, CreditCard, Briefcase, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,12 +7,28 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import PartnersCarousel from '@/components/PartnersCarousel';
+import { useTextsStore } from '@/data/siteTexts';
 
 const Index = () => {
+  const { texts } = useTextsStore();
+  
+  const getTextContent = (id: string) => {
+    const text = texts.find(t => t.id === id);
+    return text || { title: '', description: '', buttonText: '' };
+  };
+
+  const heroText = getTextContent('hero');
+  const servicosText = getTextContent('servicos');
+  const porqueText = getTextContent('porque');
+  const ctaText = getTextContent('cta');
+  const financiamentoText = getTextContent('financiamento');
+  const consorciosText = getTextContent('consorcios');
+  const emprestimosText = getTextContent('emprestimos');
+  
   const services = [
     {
-      title: "Financiamento Habitacional",
-      description: "Realizamos o sonho da casa própria com as melhores condições.",
+      title: financiamentoText.title || "Financiamento Habitacional",
+      description: financiamentoText.description || "Realizamos o sonho da casa própria com as melhores condições.",
       icon: Home,
       benefits: [
         "Minha Casa Minha Vida",
@@ -21,8 +38,8 @@ const Index = () => {
       ]
     },
     {
-      title: "Consórcios",
-      description: "Consórcios para diversos objetivos sem juros e com parcelas que cabem no seu bolso.",
+      title: consorciosText.title || "Consórcios",
+      description: consorciosText.description || "Consórcios para diversos objetivos sem juros e com parcelas que cabem no seu bolso.",
       icon: Briefcase,
       benefits: [
         "Imóveis",
@@ -32,8 +49,8 @@ const Index = () => {
       ]
     },
     {
-      title: "Empréstimos",
-      description: "Soluções financeiras para suas necessidades pessoais e empresariais.",
+      title: emprestimosText.title || "Empréstimos",
+      description: emprestimosText.description || "Soluções financeiras para suas necessidades pessoais e empresariais.",
       icon: CreditCard,
       benefits: [
         "Consignado",
@@ -55,15 +72,15 @@ const Index = () => {
           <div className="flex flex-col md:flex-row md:items-center">
             <div className="md:w-1/2 mb-10 md:mb-0">
               <h1 className="text-4xl md:text-5xl font-bold mb-4 hero-title">
-                Realize seus sonhos com a Agile Financiamentos
+                {heroText.title}
               </h1>
               <p className="text-xl mb-8 hero-description">
-                Correspondente bancário da Caixa Econômica Federal, oferecendo as melhores soluções em financiamento habitacional, consórcios e empréstimos.
+                {heroText.description}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 hero-buttons">
                 <Link to="/servicos">
                   <Button className="bg-caixa-orange hover:bg-white hover:text-caixa-orange text-white px-8 py-3 rounded-md text-lg">
-                    Conhecer Serviços
+                    {heroText.buttonText || "Conhecer Serviços"}
                   </Button>
                 </Link>
                 <a 
@@ -117,9 +134,9 @@ const Index = () => {
       {/* Serviços */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-caixa-blue mb-2">Nossos Serviços</h2>
+          <h2 className="text-3xl font-bold text-center text-caixa-blue mb-2">{servicosText.title}</h2>
           <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
-            Trabalhamos com soluções financeiras completas para você realizar seus sonhos com segurança e tranquilidade.
+            {servicosText.description}
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -148,9 +165,9 @@ const Index = () => {
       {/* Por que nos escolher */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-caixa-blue mb-2">Por que escolher a Agile?</h2>
+          <h2 className="text-3xl font-bold text-center text-caixa-blue mb-2">{porqueText.title}</h2>
           <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
-            Somos especialistas em financiamentos e oferecemos um serviço completo para você.
+            {porqueText.description}
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -203,9 +220,9 @@ const Index = () => {
       {/* CTA Section */}
       <section className="py-16 bg-caixa-orange text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Pronto para realizar seus sonhos?</h2>
+          <h2 className="text-3xl font-bold mb-4">{ctaText.title}</h2>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Entre em contato conosco agora mesmo e descubra como podemos ajudar você a conquistar seus objetivos financeiros.
+            {ctaText.description}
           </p>
           <a 
             href="https://wa.me/5517996779156" 
@@ -213,7 +230,7 @@ const Index = () => {
             rel="noopener noreferrer"
           >
             <Button className="bg-white text-caixa-orange hover:bg-caixa-blue hover:text-white px-8 py-3 text-lg">
-              Fale Conosco pelo WhatsApp
+              {ctaText.buttonText || "Fale Conosco pelo WhatsApp"}
             </Button>
           </a>
         </div>
