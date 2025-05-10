@@ -1,11 +1,15 @@
 
 import { Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTextsStore } from '@/data/siteTexts';
 
 const ContactInfo = () => {
+  const { texts } = useTextsStore();
+  const infoText = texts.find(t => t.id === 'contatoInfo') || { title: '', description: '' };
+
   return (
     <div>
-      <h2 className="text-3xl font-bold text-caixa-blue mb-6">Informações de Contato</h2>
+      <h2 className="text-3xl font-bold text-caixa-blue mb-6">{infoText.title}</h2>
       
       <div className="space-y-8">
         <div className="flex items-start">

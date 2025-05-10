@@ -12,8 +12,25 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 const TextsPage = () => {
   const { texts, updateText, resetToDefaults } = useTextsStore();
-  const uniqueSections = [...new Set(texts.map(text => text.section))];
-  const [selectedSection, setSelectedSection] = useState<string>(uniqueSections[0] || '');
+  
+  // Organize sections by grouping
+  const groupedSections: Record<string, string[]> = {};
+  texts.forEach(text => {
+    const [group] = text.section.split(' - ');
+    if (!groupedSections[group]) {
+      groupedSections[group] = [];
+    }
+    if (!groupedSections[group].includes(text.section)) {
+      groupedSections[group].push(text.section);
+    }
+  });
+  
+  const groups = Object.keys(groupedSections);
+  const [selectedGroup, setSelectedGroup] = useState<string>(groups[0] || '');
+  const [selectedSection, setSelectedSection] = useState<string>(
+    groupedSections[selectedGroup]?.[0] || ''
+  );
+  
   const [editedValues, setEditedValues] = useState<Record<string, Partial<SiteText>>>({});
   const [unsavedChanges, setUnsavedChanges] = useState<boolean>(false);
   
@@ -76,6 +93,11 @@ const TextsPage = () => {
     }
   };
 
+  const handleGroupChange = (group: string) => {
+    setSelectedGroup(group);
+    setSelectedSection(groupedSections[group][0]);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -96,79 +118,111 @@ const TextsPage = () => {
         Edite os textos exibidos no site. Selecione uma seção abaixo para começar.
       </p>
 
-      <Tabs defaultValue={selectedSection} onValueChange={setSelectedSection}>
+      <Tabs defaultValue={selectedGroup} onValueChange={handleGroupChange} className="space-y-4">
         <ScrollArea className="max-w-full pb-4">
           <TabsList className="w-full justify-start overflow-auto">
-            {uniqueSections.map(section => (
-              <TabsTrigger key={section} value={section} className="min-w-fit">
-                {section}
+            {groups.map(group => (
+              <TabsTrigger key={group} value={group} className="min-w-fit">
+                {group}
               </TabsTrigger>
             ))}
           </TabsList>
         </ScrollArea>
         
-        {uniqueSections.map(section => (
-          <TabsContent key={section} value={section} className="space-y-4">
-            {texts
-              .filter(text => text.section === section)
-              .map(text => {
-                const hasEdits = !!editedValues[text.id];
-                
-                return (
-                  <Card key={text.id}>
-                    <CardHeader>
-                      <CardTitle>{text.section} - ID: {text.id}</CardTitle>
-                      <CardDescription>
-                        Edite os campos abaixo para alterar este conteúdo
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {text.title !== undefined && (
-                        <div className="space-y-2">
-                          <Label htmlFor={`${text.id}-title`}>Título</Label>
-                          <Input 
-                            id={`${text.id}-title`} 
-                            value={(editedValues[text.id]?.title !== undefined ? editedValues[text.id]?.title : text.title) || ''}
-                            onChange={(e) => handleInputChange(text.id, 'title', e.target.value)}
-                          />
-                        </div>
-                      )}
-                      
-                      {text.description !== undefined && (
-                        <div className="space-y-2">
-                          <Label htmlFor={`${text.id}-description`}>Descrição</Label>
-                          <Textarea 
-                            id={`${text.id}-description`} 
-                            rows={3}
-                            value={(editedValues[text.id]?.description !== undefined ? editedValues[text.id]?.description : text.description) || ''}
-                            onChange={(e) => handleInputChange(text.id, 'description', e.target.value)}
-                          />
-                        </div>
-                      )}
-                      
-                      {text.buttonText !== undefined && (
-                        <div className="space-y-2">
-                          <Label htmlFor={`${text.id}-buttonText`}>Texto do Botão</Label>
-                          <Input 
-                            id={`${text.id}-buttonText`} 
-                            value={(editedValues[text.id]?.buttonText !== undefined ? editedValues[text.id]?.buttonText : text.buttonText) || ''}
-                            onChange={(e) => handleInputChange(text.id, 'buttonText', e.target.value)}
-                          />
-                        </div>
-                      )}
-                      
-                      {hasEdits && (
-                        <Button 
-                          onClick={() => handleSave(text.id)}
-                          className="mt-2"
-                        >
-                          Salvar Alterações
-                        </Button>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
+        {groups.map(group => (
+          <TabsContent key={group} value={group} className="space-y-4">
+            <div className="mb-6">
+              <Label>Selecione a seção específica:</Label>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {groupedSections[group].map(section => (
+                  <Button 
+                    key={section} 
+                    variant={section === selectedSection ? "default" : "outline"}
+                    onClick={() => setSelectedSection(section)}
+                    className="text-sm"
+                  >
+                    {section.replace(`${group} - `, '')}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              {texts
+                .filter(text => text.section === selectedSection)
+                .map(text => {
+                  const hasEdits = !!editedValues[text.id];
+                  
+                  return (
+                    <Card key={text.id}>
+                      <CardHeader>
+                        <CardTitle>
+                          {text.section} - ID: {text.id}
+                        </CardTitle>
+                        <CardDescription>
+                          Edite os campos abaixo para alterar este conteúdo
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {text.title !== undefined && (
+                          <div className="space-y-2">
+                            <Label htmlFor={`${text.id}-title`}>Título</Label>
+                            <Input 
+                              id={`${text.id}-title`} 
+                              value={(editedValues[text.id]?.title !== undefined ? editedValues[text.id]?.title : text.title) || ''}
+                              onChange={(e) => handleInputChange(text.id, 'title', e.target.value)}
+                            />
+                          </div>
+                        )}
+                        
+                        {text.description !== undefined && (
+                          <div className="space-y-2">
+                            <Label htmlFor={`${text.id}-description`}>Descrição</Label>
+                            <Textarea 
+                              id={`${text.id}-description`} 
+                              rows={3}
+                              value={(editedValues[text.id]?.description !== undefined ? editedValues[text.id]?.description : text.description) || ''}
+                              onChange={(e) => handleInputChange(text.id, 'description', e.target.value)}
+                            />
+                          </div>
+                        )}
+                        
+                        {text.content !== undefined && (
+                          <div className="space-y-2">
+                            <Label htmlFor={`${text.id}-content`}>Conteúdo</Label>
+                            <Textarea 
+                              id={`${text.id}-content`} 
+                              rows={5}
+                              value={(editedValues[text.id]?.content !== undefined ? editedValues[text.id]?.content : text.content) || ''}
+                              onChange={(e) => handleInputChange(text.id, 'content', e.target.value)}
+                            />
+                          </div>
+                        )}
+                        
+                        {text.buttonText !== undefined && (
+                          <div className="space-y-2">
+                            <Label htmlFor={`${text.id}-buttonText`}>Texto do Botão</Label>
+                            <Input 
+                              id={`${text.id}-buttonText`} 
+                              value={(editedValues[text.id]?.buttonText !== undefined ? editedValues[text.id]?.buttonText : text.buttonText) || ''}
+                              onChange={(e) => handleInputChange(text.id, 'buttonText', e.target.value)}
+                            />
+                          </div>
+                        )}
+                        
+                        {hasEdits && (
+                          <Button 
+                            onClick={() => handleSave(text.id)}
+                            className="mt-2"
+                          >
+                            Salvar Alterações
+                          </Button>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+            </div>
           </TabsContent>
         ))}
       </Tabs>

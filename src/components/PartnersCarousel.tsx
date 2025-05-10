@@ -7,8 +7,12 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
+import { useTextsStore } from '@/data/siteTexts';
 
 const PartnersCarousel = () => {
+  const { texts } = useTextsStore();
+  const parceirosText = texts.find(t => t.id === 'parceiros') || { title: '', description: '' };
+  
   const partners = [
     {
       name: "Caixa",
@@ -30,9 +34,9 @@ const PartnersCarousel = () => {
   return (
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-center text-caixa-blue mb-2">Nossos Parceiros</h2>
+        <h2 className="text-3xl font-bold text-center text-caixa-blue mb-2">{parceirosText.title}</h2>
         <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
-          Trabalhamos com os principais programas de financiamento habitacional do país.
+          {parceirosText.description}
         </p>
 
         <Carousel 

@@ -1,15 +1,22 @@
 
 import { Phone, Mail, MapPin, Home, Briefcase, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTextsStore } from '@/data/siteTexts';
 
 const Footer = () => {
+  const { texts } = useTextsStore();
+  
+  const contatoText = texts.find(t => t.id === 'footerContato') || { title: '', description: '' };
+  const linksText = texts.find(t => t.id === 'footerLinks') || { title: '', description: '' };
+  const horarioText = texts.find(t => t.id === 'footerHorario') || { title: '', description: '' };
+
   return (
     <footer className="bg-caixa-blue text-white">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Contato */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Entre em contato</h3>
+            <h3 className="text-xl font-bold mb-4">{contatoText.title}</h3>
             <ul className="space-y-3">
               <li className="flex items-center">
                 <Phone size={20} className="mr-2 flex-shrink-0" />
@@ -35,7 +42,7 @@ const Footer = () => {
 
           {/* Links rápidos */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Links rápidos</h3>
+            <h3 className="text-xl font-bold mb-4">{linksText.title}</h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/" className="flex items-center hover:text-caixa-orange">
@@ -62,7 +69,7 @@ const Footer = () => {
 
           {/* Horário de atendimento */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Horário de atendimento</h3>
+            <h3 className="text-xl font-bold mb-4">{horarioText.title}</h3>
             <p className="mb-4">Segunda a Sexta: 8h às 18h</p>
             <p className="mb-4">Sábados: 8h às 12h</p>
             <a 
