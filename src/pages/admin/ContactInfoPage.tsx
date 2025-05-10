@@ -20,10 +20,18 @@ const ContactInfoPage = () => {
       // Handle nested properties
       if (path.includes('.')) {
         const [parent, child] = path.split('.');
-        newState[parent as keyof ContactInfo] = {
-          ...((prev[parent as keyof ContactInfo] || contactInfo[parent as keyof ContactInfo]) as object),
-          [child]: value
-        };
+        
+        if (parent === 'address') {
+          newState.address = {
+            ...(prev.address || contactInfo.address),
+            [child]: value
+          };
+        } else if (parent === 'schedule') {
+          newState.schedule = {
+            ...(prev.schedule || contactInfo.schedule),
+            [child]: value
+          };
+        }
       } else {
         newState[path as keyof ContactInfo] = value as any;
       }
