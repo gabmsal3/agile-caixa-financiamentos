@@ -6,7 +6,8 @@ import {
   Settings, 
   LogOut,
   Phone,
-  Briefcase
+  Briefcase,
+  Mail
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ const AdminLayout = () => {
     { name: "Textos", path: "/adm/texts", icon: <FileText className="h-5 w-5" /> },
     { name: "Contato", path: "/adm/contact-info", icon: <Phone className="h-5 w-5" /> },
     { name: "Serviços", path: "/adm/service-items", icon: <Briefcase className="h-5 w-5" /> },
+    { name: "Email", path: "/adm/email-config", icon: <Mail className="h-5 w-5" /> },
     { name: "Configurações", path: "/adm/settings", icon: <Settings className="h-5 w-5" /> },
   ];
   

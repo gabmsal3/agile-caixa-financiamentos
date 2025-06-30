@@ -1,4 +1,3 @@
-
 // Arquivo para armazenar os textos editáveis do site
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -38,6 +37,19 @@ export interface ServiceItemGroup {
   section: string;
   title: string;
   items: ServiceItem[];
+}
+
+// Interface para configurações de email
+export interface EmailConfig {
+  recipientEmail: string;
+  sendMethod: 'mail' | 'phpmailer';
+  smtp: {
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+    secure: boolean;
+  };
 }
 
 export const defaultContactInfo: ContactInfo = {
@@ -140,6 +152,18 @@ export const defaultServiceItems: ServiceItemGroup[] = [
     ]
   }
 ];
+
+export const defaultEmailConfig: EmailConfig = {
+  recipientEmail: "contato@agilefinanciamentos.com.br",
+  sendMethod: "mail",
+  smtp: {
+    host: "",
+    port: 587,
+    username: "",
+    password: "",
+    secure: true
+  }
+};
 
 export const defaultTexts: SiteText[] = [
   // Home Page
@@ -309,9 +333,11 @@ interface TextsState {
   texts: SiteText[];
   contactInfo: ContactInfo;
   serviceItems: ServiceItemGroup[];
+  emailConfig: EmailConfig;
   updateText: (id: string, updates: Partial<SiteText>) => void;
   updateContactInfo: (updates: Partial<ContactInfo>) => void;
   updateServiceItem: (groupId: string, itemIndex: number, title: string, items: string[]) => void;
+  updateEmailConfig: (updates: Partial<EmailConfig>) => void;
   resetToDefaults: () => void;
 }
 
@@ -321,6 +347,7 @@ export const useTextsStore = create<TextsState>()(
       texts: defaultTexts,
       contactInfo: defaultContactInfo,
       serviceItems: defaultServiceItems,
+      emailConfig: defaultEmailConfig,
       updateText: (id, updates) => 
         set((state) => ({
           texts: state.texts.map((text) => 
@@ -346,10 +373,15 @@ export const useTextsStore = create<TextsState>()(
               : group
           )
         })),
+      updateEmailConfig: (updates) =>
+        set((state) => ({
+          emailConfig: { ...state.emailConfig, ...updates }
+        })),
       resetToDefaults: () => set({ 
         texts: defaultTexts,
         contactInfo: defaultContactInfo,
-        serviceItems: defaultServiceItems
+        serviceItems: defaultServiceItems,
+        emailConfig: defaultEmailConfig
       })
     }),
     {
