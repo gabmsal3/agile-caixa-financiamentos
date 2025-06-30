@@ -1,0 +1,9 @@
+
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/agile/public_html
+    - /bin/cp -R dist/* $DEPLOYPATH
+    - /bin/cp .htaccess $DEPLOYPATH
+    - /bin/cp *.php $DEPLOYPATH
+    - /bin/cp *.json $DEPLOYPATH 2>/dev/null || true
